@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Threadsスライド画像プロンプトメーカー</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Threads / Instagram 用</p>
+        <h1>スライド画像プロンプトメーカー</h1>
+        <p class="sub">
+          AIが混乱しにくい条件整理で、スライド画像用のプロンプトを生成します。
+        </p>
+      </div>
+      <div class="topbar-actions">
+        <button id="resetBtn" class="btn btn-ghost">初期化</button>
+        <button id="copyPromptBtn" class="btn btn-primary">プロンプトをコピー</button>
+      </div>
+    </header>
+
+    <main class="main-grid">
+      <section class="panel left-panel">
+        <div class="panel-card">
+          <h2>① 基本設定</h2>
+
+          <div class="field">
+            <label for="targetPreset">ターゲット（プリセット）</label>
+            <select id="targetPreset">
+              <option value="Threads運用ママ">Threads運用ママ</option>
+              <option value="副業初心者ママ">副業初心者ママ</option>
+              <option value="AI副業に興味がある人">AI副業に興味がある人</option>
+              <option value="コンテンツ販売を始めたい人">コンテンツ販売を始めたい人</option>
+              <option value="美容アフィをしたい女性">美容アフィをしたい女性</option>
+              <option value="Instagram運用ママ">Instagram運用ママ</option>
+              <option value="自由入力">自由入力</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="customTarget">自由入力ターゲット</label>
+            <input id="customTarget" type="text" placeholder="例：お菓子教室の先生" />
+            <small class="hint">「自由入力」を選ぶと、この内容に合わせた汎用ネタ例を出します。</small>
+          </div>
+
+          <div class="field">
+            <label for="mainTheme">テーマ</label>
+            <input id="mainTheme" type="text" placeholder="例：副業迷子 / 集客 / 教室運営 / AI活用" />
+          </div>
+
+          <div class="field">
+            <label>スライド形式</label>
+            <div class="choice-grid" id="slideTypeGroup">
+              <button class="choice-btn active" data-value="single">1枚1画像（最大4枚）</button>
+              <button class="choice-btn" data-value="split2">2分割（最大2枚）</button>
+              <button class="choice-btn" data-value="split4">4分割（1枚のみ）</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="slideCount">枚数</label>
+            <select id="slideCount">
+              <option value="1">1枚</option>
+              <option value="2">2枚</option>
+              <option value="3">3枚</option>
+              <option value="4" selected>4枚</option>
+            </select>
+            <small id="slideCountHint" class="hint">1枚1画像のときは最大4枚です。</small>
+          </div>
+
+          <div class="field">
+            <label>スタイル</label>
+            <div class="style-grid" id="styleGroup">
+              <button class="style-card active" data-style="infographic">
+                <span class="style-title">図解</span>
+                <span class="style-desc">見やすい・整理感</span>
+              </button>
+              <button class="style-card" data-style="comic">
+                <span class="style-title">漫画</span>
+                <span class="style-desc">親しみ・感情</span>
+              </button>
+              <button class="style-card" data-style="pencil">
+                <span class="style-title">色鉛筆</span>
+                <span class="style-desc">やさしい・手描き感</span>
+              </button>
+              <button class="style-card" data-style="clay">
+                <span class="style-title">Clay 3D</span>
+                <span class="style-desc">ころん・可愛い</span>
+              </button>
+              <button class="style-card" data-style="minimal">
+                <span class="style-title">ミニマル</span>
+                <span class="style-desc">洗練・余白</span>
+              </button>
+              <button class="style-card" data-style="storybook">
+                <span class="style-title">絵本</span>
+                <span class="style-desc">温かい・世界観</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>テキスト設定</label>
+            <div class="choice-grid" id="textModeGroup">
+              <button class="choice-btn active" data-value="normal">テキストあり</button>
+              <button class="choice-btn" data-value="minimal">最小文字</button>
+              <button class="choice-btn" data-value="none">テキストなし</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>文字サイズ</label>
+            <div class="choice-grid" id="fontSizeGroup">
+              <button class="choice-btn" data-value="small">小</button>
+              <button class="choice-btn active" data-value="medium">中</button>
+              <button class="choice-btn" data-value="large">大</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="characterNote">キャラ補足メモ</label>
+            <textarea id="characterNote" rows="3" placeholder="例：丸顔、お団子ヘア、やさしい表情、同じキャラを全スライドで統一"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="extraVisualNote">ビジュアル補足</label>
+            <textarea id="extraVisualNote" rows="3" placeholder="例：パステル配色、余白多め、SNS投稿向け、読みやすい配置"></textarea>
+          </div>
+        </div>
+
+        <div class="panel-card">
+          <div class="section-head">
+            <h2>② ネタ例</h2>
+            <div class="inline-actions">
+              <button id="generateExamplesBtn" class="btn btn-secondary">ネタ例を出す</button>
+              <button id="fillSlidesBtn" class="btn btn-ghost">上から順に入力</button>
+            </div>
+          </div>
+          <p class="section-note">
+            スタイルとターゲットに合わせて例文を表示します。クリックで各スライドに入れられます。
+          </p>
+          <div id="exampleList" class="example-list"></div>
+        </div>
+
+        <div class="panel-card">
+          <div class="section-head">
+            <h2>③ スライド内容</h2>
+            <button id="applyRestrictionsBtn" class="btn btn-ghost">形式に合わせて整える</button>
+          </div>
+          <p class="section-note">1枚1画像は最大4枚、2分割は最大2枚、4分割は1枚のみです。</p>
+
+          <div id="slidesContainer"></div>
+        </div>
+      </section>
+
+      <section class="panel right-panel">
+        <div class="panel-card sticky-card">
+          <h2>④ プレビュー</h2>
+          <div id="previewArea" class="preview-area"></div>
+        </div>
+
+        <div class="panel-card">
+          <div class="section-head">
+            <h2>⑤ 生成されたプロンプト</h2>
+            <button id="buildPromptBtn" class="btn btn-primary">プロンプト生成</button>
+          </div>
+          <textarea id="promptOutput" class="prompt-output" placeholder="ここにプロンプトが出ます"></textarea>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
